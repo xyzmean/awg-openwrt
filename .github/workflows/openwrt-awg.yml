@@ -12,7 +12,7 @@ jobs:
     #runs-on: ubuntu-latest
     strategy:
       matrix:
-        tag: ['23.05.4']
+        tag: ['master']
         build_env:
           - pkgarch: aarch64_cortex-a53
             target: mediatek
@@ -21,7 +21,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           repository: openwrt/openwrt
-          ref: v${{ matrix.tag }}
+          ref: ${{ matrix.tag }}
           fetch-depth: 0
 
       - name: Update and install feeds for OpenWRT_v${{ matrix.tag }} ${{ matrix.build_env.target}}/${{ matrix.build_env.subtarget}}
@@ -36,7 +36,7 @@ jobs:
           rm -rf bin/targets/${target}/${subtarget}/packages/  || true
 
           wget https://downloads.openwrt.org/releases/${{ matrix.tag }}/targets/${target}/${subtarget}/feeds.buildinfo -O feeds.conf
-          echo "src-git awgopenwrt https://github.com/lolo6oT/awg-openwrt.git;dev" >> ./feeds.conf
+          echo "src-git awgopenwrt https://github.com/lolo6oT/awg-openwrt.git;dev-snapshot" >> ./feeds.conf
 
           ./scripts/feeds update -a
           ./scripts/feeds install -a
