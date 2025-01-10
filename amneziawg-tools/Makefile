@@ -36,7 +36,7 @@ define Package/amneziawg-tools
   TITLE:=AmneziaWG userspace control program (amneziawg)
   DEPENDS:= \
 	  +!BUSYBOX_CONFIG_IP:ip \
-	  +!BUSYBOX_CONFIG_FEATURE_IP_LINK:ip
+	  +!BUSYBOX_CONFIG_FEATURE_IP_LINK:ip \
 	  +kmod-amneziawg
 endef
 
