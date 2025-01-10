@@ -21,6 +21,7 @@ define KernelPackage/amneziawg
 		+IPV6:kmod-udptunnel6 \
 		+kmod-crypto-lib-chacha20poly1305 \
 		+kmod-crypto-lib-curve25519
+	AUTOLOAD:=$(call AutoProbe,amneziawg)
 endef
 
 define Build/Prepare
