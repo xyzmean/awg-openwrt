@@ -38,6 +38,8 @@ define Package/amneziawg-tools
 	  +!BUSYBOX_CONFIG_IP:ip \
 	  +!BUSYBOX_CONFIG_FEATURE_IP_LINK:ip \
 	  +kmod-amneziawg
+	  +ip-full
+	  +ip-tiny
 endef
 
 define Package/amneziawg-tools/description
