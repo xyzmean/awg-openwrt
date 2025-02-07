@@ -3,7 +3,7 @@ name: Create Release Mediatek Filogic
 on:
   push:
     tags:
-      - "snapshot-v*"
+      - "snapshot-*"
 
 jobs:
   build:
