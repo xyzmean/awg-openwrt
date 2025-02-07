@@ -7,6 +7,7 @@
 "require form";
 "require network";
 "require validation";
+"require uqr";
 
 var generateKey = rpc.declare({
 	object: "luci.amneziawg",
@@ -70,46 +71,16 @@ function generateDescription(name, texts) {
 	]);
 }
 
-function invokeQREncode(data, code) {
-	return fs
-		.exec_direct("/usr/bin/qrencode", [
-			"--inline",
-			"--8bit",
-			"--type=SVG",
-			"--output=-",
-			"--",
-			data,
-		])
-		.then(function (svg) {
-			code.style.opacity = "";
-			dom.content(
-				code,
-				Object.assign(E(svg), { style: "width:100%;height:auto" })
-			);
-		})
-		.catch(function (error) {
-			code.style.opacity = "";
-
-			if (L.isObject(error) && error.name == "NotFoundError") {
-				dom.content(code, [
-					Object.assign(E(qrIcon), {
-						style: "width:32px;height:32px;opacity:.2",
-					}),
-					E(
-						"p",
-						_(
-							"The %sqrencode%s package is required for generating an QR code image of the configuration."
-						).format("<em>", "</em>")
-					),
-				]);
-			} else {
-				dom.content(code, [
-					_("Unable to generate QR code: %s").format(
-						L.isObject(error) ? error.message : error
-					),
-				]);
-			}
-		});
+function buildSVGQRCode(data, code) {
+	// pixel size larger than 4 clips right and bottom edges of complex configs
+	const options = {
+		pixelSize: 4,
+		whiteColor: 'white',
+		blackColor: 'black'
+	};
+	const svg = uqr.renderSVG(data, options);
+	code.style.opacity = '';
+	dom.content(code, Object.assign(E(svg), { style: 'width:100%;height:auto' }));
 }
 
 var cbiKeyPairGenerate = form.DummyValue.extend({
@@ -427,6 +398,7 @@ return network.registerProtocol("amneziawg", {
 		ss.addbtntitle = _("Add peer");
 		ss.nodescriptions = true;
 		ss.modaltitle = _("Edit peer");
+		ss.sortable = true;
 
 		ss.handleDragConfig = function (ev) {
 			ev.stopPropagation();
@@ -889,11 +861,12 @@ return network.registerProtocol("amneziawg", {
 		o = ss.option(
 			form.Flag,
 			"disabled",
-			_("Peer disabled"),
+			_("Disabled"),
 			_("Enable / Disable peer. Restart amneziawg interface to apply changes.")
 		);
-		o.modalonly = true;
+		o.editable = true;
 		o.optional = true;
+		o.width = '5%';
 
 		o = ss.option(
 			form.Value,
@@ -1334,7 +1307,7 @@ return network.registerProtocol("amneziawg", {
 						);
 						code.style.opacity = ".5";
 
-						invokeQREncode(conf.firstChild.data, code);
+						buildSVGQRCode(conf.firstChild.data, code);
 					}
 				}
 
@@ -1418,7 +1391,7 @@ return network.registerProtocol("amneziawg", {
 						]
 					);
 
-					invokeQREncode(peer_config, node.firstChild);
+					buildSVGQRCode(peer_config, node.firstChild);
 
 					return node;
 				};
