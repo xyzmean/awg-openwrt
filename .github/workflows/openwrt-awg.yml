@@ -3,7 +3,7 @@ name: Create Release Mediatek Filogic
 on:
   push:
     tags:
-      - "snapshots-v*"
+      - "snapshot-v*"
 
 jobs:
   build:
@@ -12,7 +12,7 @@ jobs:
     #runs-on: ubuntu-latest
     strategy:
       matrix:
-        tag: ['snapshots']
+        tag: ['snapshot']
         build_env:
           - pkgarch: aarch64_cortex-a53
             target: mediatek
@@ -35,13 +35,13 @@ jobs:
           rm -rf bin/packages/${pkgarch}/awgopenwrt/ || true
           rm -rf bin/targets/${target}/${subtarget}/packages/  || true
 
-          wget https://downloads.openwrt.org/releases/snapshots/targets/${target}/${subtarget}/feeds.buildinfo -O feeds.conf
+          wget https://downloads.openwrt.org/snapshots/targets/${target}/${subtarget}/feeds.buildinfo -O feeds.conf
           echo "src-git awgopenwrt https://github.com/lolo6oT/awg-openwrt.git;dev-snapshot" >> ./feeds.conf
 
           ./scripts/feeds update -a
           ./scripts/feeds install -a
 
-          wget https://downloads.openwrt.org/releases/${{ matrix.tag }}/targets/${target}/${subtarget}/config.buildinfo -O .config
+          wget https://downloads.openwrt.org/snapshots/targets/${target}/${subtarget}/config.buildinfo -O .config
 
           make defconfig
 
