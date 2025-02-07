@@ -3,7 +3,6 @@ include $(TOPDIR)/rules.mk
 include $(INCLUDE_DIR)/kernel.mk
 
 PKG_NAME:=kmod-amneziawg
-PKG_VERSION:=1.0.0
 PKG_RELEASE:=$(AUTORELEASE)
 
 include $(INCLUDE_DIR)/package.mk
