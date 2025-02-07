@@ -36,7 +36,7 @@ jobs:
           rm -rf bin/targets/${target}/${subtarget}/packages/  || true
 
           wget https://downloads.openwrt.org/releases/${{ matrix.tag }}/targets/${target}/${subtarget}/feeds.buildinfo -O feeds.conf
-          echo "src-git awgopenwrt https://github.com/lolo6oT/awg-openwrt.git;dev-24.10" >> ./feeds.conf
+          echo "src-git awgopenwrt https://github.com/lolo6oT/awg-openwrt.git;dev-snapshot" >> ./feeds.conf
 
           ./scripts/feeds update -a
           ./scripts/feeds install -a
@@ -45,7 +45,7 @@ jobs:
 
           make defconfig
 
-      - name: Make Download and World OpenWRT_v${{ matrix.tag }} ${{ matrix.build_env.target}}/${{ matrix.build_env.subtarget}}
+      - name: Make Download and World OpenWRT_${{ matrix.tag }} ${{ matrix.build_env.target}}/${{ matrix.build_env.subtarget}}
         run: |
           export FORCE_UNSAFE_CONFIGURE=1
           echo "CONFIG_PACKAGE_kmod-amneziawg=m" >> .config
@@ -68,27 +68,27 @@ jobs:
           echo "Make Kernel Compile"
           make target/linux/compile -i -j $(nproc)
 
-      - name: Make ipks amnezia_${{ github.ref_name }} for original OpenWRT_v${{ matrix.tag }} ${{ matrix.build_env.target}}/${{ matrix.build_env.subtarget}}
+      - name: Make apks amnezia_${{ github.ref_name }} for original OpenWRT_${{ matrix.tag }} ${{ matrix.build_env.target}}/${{ matrix.build_env.subtarget}}
         run: |
           make -j $(nproc) package/amneziawg-tools/{clean,download,prepare,compile}
           make -j $(nproc) package/amneziawg-go/{clean,download,prepare,compile}
           make -j $(nproc) package/kmod-amneziawg/{clean,download,prepare,compile}
           make -j $(nproc) package/luci-proto-amneziawg/{clean,download,prepare,compile}
 
-      - name: Prepare artifacts OpenWRT_v${{ matrix.tag }} ${{ matrix.build_env.target}}/${{ matrix.build_env.subtarget}}
+      - name: Prepare artifacts OpenWRT_${{ matrix.tag }} ${{ matrix.build_env.target}}/${{ matrix.build_env.subtarget}}
         run: |
           tag_name=${{ github.ref_name }}
           mkdir -p awgrelease
           postfix="${tag_name}_v${{ matrix.tag }}_${{ matrix.build_env.pkgarch}}_${{ matrix.build_env.target}}_${{ matrix.build_env.subtarget}}"
-          cp bin/packages/${{ matrix.build_env.pkgarch }}/awgopenwrt/amneziawg-tools_*.ipk awgrelease/amneziawg-tools_${postfix}.ipk
-          cp bin/packages/${{ matrix.build_env.pkgarch }}/awgopenwrt/amneziawg-go_*.ipk awgrelease/amneziawg-go_${postfix}.ipk
-          cp bin/packages/${{ matrix.build_env.pkgarch }}/awgopenwrt/luci-proto-amneziawg_*.ipk awgrelease/luci-proto-amneziawg_${postfix}.ipk
-          cp bin/targets/${{ matrix.build_env.target}}/${{ matrix.build_env.subtarget}}/packages/kmod-amneziawg_*.ipk awgrelease/kmod-amneziawg_${postfix}.ipk
+          cp bin/packages/${{ matrix.build_env.pkgarch }}/awgopenwrt/amneziawg-tools_*.apk awgrelease/amneziawg-tools_${postfix}.apk
+          cp bin/packages/${{ matrix.build_env.pkgarch }}/awgopenwrt/amneziawg-go_*.apk awgrelease/amneziawg-go_${postfix}.apk
+          cp bin/packages/${{ matrix.build_env.pkgarch }}/awgopenwrt/luci-proto-amneziawg_*.apk awgrelease/luci-proto-amneziawg_${postfix}.apk
+          cp bin/targets/${{ matrix.build_env.target}}/${{ matrix.build_env.subtarget}}/packages/kmod-amneziawg_*.apk awgrelease/kmod-amneziawg_${postfix}.apk
 
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
-          files: awgrelease/*.ipk
+          files: awgrelease/*.apk
 
       - name: Cleanup
         run: |
