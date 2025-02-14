@@ -258,7 +258,7 @@ return network.registerProtocol("amneziawg", {
 			"fwmark",
 			_("Firewall Mark"),
 			_(
-				"Optional. 32-bit mark for outgoing encrypted packets. Enter value in hex, starting with %s."
+				"Optional. 32-bit mark for packets during firewall processing. Enter value in hex, starting with %s."
 			).format("<code>0x</code>")
 		);
 		o.optional = true;
