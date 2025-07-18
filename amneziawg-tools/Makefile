@@ -9,12 +9,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=amneziawg-tools
-PKG_VERSION:=1.0.20241018
+PKG_VERSION:=v1.0.20250706
 PKG_RELEASE:=$(AUTORELEASE)
 
 PKG_SOURCE:=v$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://github.com/amnezia-vpn/amneziawg-tools/archive/refs/tags/
-PKG_HASH:=60f1cec1774fb871a2d8dc24e4f731625516d90f663d6e0d2c77d9247222f2f9
+PKG_HASH:=d71528867f884722be380583992bca52b76df9fbc7594636cb4de62ad02e8cb5
 
 PKG_MAINTAINER:=Amnezia Admin <admin@amnezia.org>
 PKG_LICENSE:=GPL-2.0
