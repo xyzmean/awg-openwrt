@@ -8,7 +8,7 @@ jobs:
     #runs-on: ubuntu-latest
     strategy:
       matrix:
-        tag: ['24.10.0']
+        tag: ['24.10.1']
         build_env:
           - pkgarch: aarch64_cortex-a53
             target: mediatek
@@ -32,7 +32,7 @@ jobs:
           rm -rf bin/targets/${target}/${subtarget}/packages/  || true
 
           wget https://downloads.openwrt.org/releases/${{ matrix.tag }}/targets/${target}/${subtarget}/feeds.buildinfo -O feeds.conf
-          echo "src-git awgopenwrt https://github.com/lolo6oT/awg-openwrt.git;dev-24.10" >> ./feeds.conf
+          echo "src-git awgopenwrt https://github.com/lolo6oT/awg-openwrt.git" >> ./feeds.conf
 
           ./scripts/feeds update -a
           ./scripts/feeds install -a
